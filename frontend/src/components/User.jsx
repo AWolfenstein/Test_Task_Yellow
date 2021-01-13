@@ -2,16 +2,18 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Col, Row, Card, Button } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
-import { getProfile,logout } from "../actions/authAction";
-const User = ({ user,isLoggedIn }) => {
+import { logoutUser  } from "../actions/authActions";
+
+const User = ({ auth }) => {
+  const { user,isAuthenticated } = auth;
   const dispatch = useDispatch();
   let history = useHistory()
   useEffect(() => {
-    isLoggedIn ? dispatch(getProfile()) : history.push("/login")
-  }, [isLoggedIn]);
+    if( !isAuthenticated) {history.push("/login")}
+  }, );
  const logoutNow =()=>{
-    dispatch(logout())  
-  
+    dispatch(logoutUser())  
+    history.push("/login")
  }
   const body = (
     <Container fluid="md">
@@ -21,7 +23,6 @@ const User = ({ user,isLoggedIn }) => {
             <Card.Header as="h5">Profile</Card.Header>
             <Card.Body>
               <Card.Title>{user && user.name}</Card.Title>
-              <Card.Text>{user && user.email}</Card.Text>
               <Button variant="primary" onClick={logoutNow}>Logout</Button>
             </Card.Body>
           </Card>
@@ -33,10 +34,9 @@ const User = ({ user,isLoggedIn }) => {
 };
 
 function mapStateToProps(state) {
-  const { isLoggedIn, user } = state.auth;
+  const { auth } = state;
   return {
-    isLoggedIn,
-    user,
+    auth
   };
 }
 export default connect(mapStateToProps)(User);

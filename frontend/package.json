@@ -9,6 +9,8 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "formik": "^2.1.5",
+    "is-empty": "^1.2.0",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
@@ -26,6 +28,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",

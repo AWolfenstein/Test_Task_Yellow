@@ -5,9 +5,9 @@ import ModalError from "./ModalError";
 import { Container, Col, Row, Form, Button } from "react-bootstrap";
 import "../styles/form.css";
 import { connect, useDispatch } from "react-redux";
-import { submitLogin } from "../actions/authAction";
+import { registerUser  } from "../actions/authActions";
 
-const Register = ({ isLoggedIn, message }) => {
+const Register = ({ auth }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [errorM, setErrorM] = useState("");
@@ -24,10 +24,10 @@ const Register = ({ isLoggedIn, message }) => {
     setFieldValue,
   } = useFormik({
     initialValues: {
-      clientId: "1",
       email: "",
       name:"",
       password: "",
+      password2:"",
     },
     validate() {
       const errors = {};
@@ -43,24 +43,36 @@ const Register = ({ isLoggedIn, message }) => {
       } else if (values.password.length <= 3) {
         errors.password = "Must be more than 3 characters";
       }
+      if (touched.password2 && !values.password2) {
+        errors.password2 = "Required";
+      } else if (values.password2.length <= 3) {
+        errors.password2 = "Must be more than 3 characters";
+      }
+      if (values.password !== values.password2){
+        errors.password = "пароли должны совподать";
+        errors.password2 = "пароли должны совподать";
+      }
       return errors;
     },
     onSubmit: (values) => {
-      //dispatch(submitLogin(JSON.stringify(values, null, 2)));
+      dispatch(registerUser(values ,history));
     },
-  });
-  useEffect(() => {
-    isLoggedIn ? history.push("/user") : localStorage.removeItem("accessToken");
   });
 
   useEffect(() => {
+    if(auth && auth.isAuthenticated){
+     history.push("/user")
+    }
+   });
+
+ /* useEffect(() => {
     if (message) {
       const err = (message && message.message) || message.password.message;
       setErrorM(err);
       setShow(true);
     }
   }, [message]);
-
+*/
   const body = (
     <Container fluid="md">
       <Row>
@@ -113,11 +125,28 @@ const Register = ({ isLoggedIn, message }) => {
                 placeholder="Password"
                 isValid={touched["password"] && !errors["password"]}
                 isInvalid={
-                  !!errors["password"] || (message && message["password"])
+                  !!errors["password"] //|| (message && message["password"])
                 }
               />
               <Form.Control.Feedback type="invalid">
                 {errors["password"]}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password Retry</Form.Label>
+              <Form.Control
+                type="password"
+                name="password2"
+                {...getFieldProps("password2")}
+                placeholder="Password retry"
+                isValid={touched["password2"] && !errors["password2"]}
+                isInvalid={
+                  !!errors["password2"] //|| (message && message["password2"])
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors["password2"]}
               </Form.Control.Feedback>
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -144,10 +173,9 @@ const Register = ({ isLoggedIn, message }) => {
 };
 
 function mapStateToProps(state) {
-  const { isLoggedIn, message } = state.auth;
+  const { auth } = state;
   return {
-    isLoggedIn,
-    message,
+    auth
   };
 }
 export default connect(mapStateToProps)(Register);

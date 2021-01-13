@@ -1,6 +1,5 @@
 var createError = require("http-errors");
 var express = require("express");
-var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
@@ -8,7 +7,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var usersRouter = require("./routes/api/users");
 
 var app = express();
 
@@ -26,12 +25,13 @@ mongoose
   .then(() => console.log("MongoDB successfully connected"))
   .catch((err) => console.log(err));
 
+app.use(passport.initialize());
 
 
-
+require("./config/passport")(passport);
 
   app.use("/", indexRouter);
-  app.use("/users", usersRouter);
+  app.use("/api/users", usersRouter);
 
 const port = process.env.PORT || 5000;
 

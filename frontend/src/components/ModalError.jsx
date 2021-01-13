@@ -1,13 +1,12 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { clearMessage } from "../actions/authAction";
+
 import { useDispatch } from "react-redux";
 
 const ModalError = ({ show, setShow, message,setErrorM }) => {
   const dispatch = useDispatch();
   const handleClose = () => {
     setErrorM("")
-    dispatch(clearMessage());
     setShow(false);
   };
 
