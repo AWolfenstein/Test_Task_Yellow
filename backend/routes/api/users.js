@@ -14,7 +14,6 @@ router.post("/register", (req, res) => {
 
   const { errors, isValid } = validateRegisterInput(req.body);
 
-  // Check validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
@@ -28,8 +27,6 @@ router.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password
       });
-
-      // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
           if (err) throw err;
@@ -61,14 +58,11 @@ console.log(req.body);
     }
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        // User matched
-        // Create JWT Payload
+        
         const payload = {
           id: user.id,
           name: user.name
         };
-
-        // Sign token
         jwt.sign(
           payload,
           keys.secret,
