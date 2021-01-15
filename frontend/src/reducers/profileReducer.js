@@ -4,11 +4,13 @@ import {
   DATA_REMOVED,
   DATA_UPDATED,
   SET_WEEK_DATA,
+  SET_IMGS,
 } from "../actions/types";
 
 const initialState = {
   userData: [],
   weekData: [],
+  userIMG:[],
 };
 
 export default function (state = initialState, action) {
@@ -35,6 +37,11 @@ export default function (state = initialState, action) {
         ...state,
         weekData: action.payload,
       };
+      case SET_IMGS:
+        return {
+          ...state,
+          userIMG: action.payload,
+        };
     default:
       return state;
   }

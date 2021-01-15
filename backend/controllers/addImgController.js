@@ -21,7 +21,7 @@ module.exports = {
         });
       },
       removeImage: function (id_data, callback) {
-        Profile.remove({ _id: id_data }, function (err, result) {
+        UserImage.remove({ _id: id_data }, function (err, result) {
           if (err) {
             callback(err, null);
             return;

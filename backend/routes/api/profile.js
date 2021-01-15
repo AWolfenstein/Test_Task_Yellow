@@ -163,8 +163,7 @@ router.post("/add_img", function (req, res) {
       if (err) {
         console.log(err);
         res.status(500).json({
-          success: false,
-          error: err,
+          message: err,
         });
         return;
       }
@@ -174,15 +173,13 @@ router.post("/add_img", function (req, res) {
           console.log(err);
         } else {
           res.status(201).json({
-            success: true,
             data: result,
           });
         }
         console.log("imageUrl Added");
       } else {
         res.status(400).json({
-          success: false,
-          data: result,
+          message: "Failed Upload",
         });
       }
     }
@@ -202,12 +199,11 @@ router.get("/load_imgs/:id_user", function (req, res) {
     }
     if (result.length != 0) {
       res.status(200).json({
-        success: true,
         data: result,
       });
     } else {
       res.status(404).json({
-        success: false,
+        message: "Imgs not loaded",
       });
     }
   });

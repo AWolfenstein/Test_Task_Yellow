@@ -1,25 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Col, Row, Card, Button } from "react-bootstrap";
+import {
+  Container,
+  Col,
+  Row,
+  Card,
+  Button,
+  Form,
+  Spinner,
+} from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
 import { logoutUser } from "../actions/authActions";
 import {
   getData,
   removeRace,
   getRangWeekData,
+  getImgs,
 } from "../actions/profileActions";
 import TableRace from "./TableRace";
 import ModalCreateRace from "./ModalCreateRace";
 import ReportCard from "./ReportCard";
 import ModalReportRace from "./ModalReportRace";
 import ModalError from "./ModalError";
+import CardImg from "./CardImg";
+import axios from "axios";
 
 const User = ({ auth, profile, errorsM }) => {
   const dispatch = useDispatch();
   let history = useHistory();
+  const url = "https://api.cloudinary.com/v1_1/dypdgycuj/image/upload";
+  const preset = "dmc7blfe";
 
   const { user, isAuthenticated } = auth;
-  const { userData, weekData } = profile;
+  const { userData, weekData, userIMG } = profile;
 
   const [show, setShow] = useState(false);
   const [dataRace, setDataRace] = useState({});
@@ -31,6 +44,9 @@ const User = ({ auth, profile, errorsM }) => {
 
   const [showErr, setShowErr] = useState(false);
   const [errorM, setErrorM] = useState("");
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!isAuthenticated) {
       history.push("/login");
@@ -40,6 +56,7 @@ const User = ({ auth, profile, errorsM }) => {
   useEffect(() => {
     if (user && user.id) {
       dispatch(getData(user.id));
+      dispatch(getImgs(user.id));
     }
   }, []);
 
@@ -47,7 +64,7 @@ const User = ({ auth, profile, errorsM }) => {
     if (errorsM.message) {
       const err = errorsM.message;
       setErrorM(err);
-      setShow(true);
+      setShowErr(true);
     }
   });
 
@@ -119,6 +136,35 @@ const User = ({ auth, profile, errorsM }) => {
     setReportShow(true);
   };
 
+  const onChangeBrowse = (e) => {
+    setImage(e.target.files[0]);
+  };
+  const onUpload = async () => {
+    if (image) {
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", preset);
+      try {
+        setLoading(true);
+        var instance = axios.create();
+        delete instance.defaults.headers.common["Authorization"];
+        const res = await instance.post(url, formData);
+        const imageUrl = res.data.secure_url;
+        const image = await axios.post("/api/profile/add_img", {
+          imageUrl: imageUrl,
+          id_user: user.id,
+        });
+        setLoading(false);
+        setImage(image.data);
+        dispatch(getImgs(user.id));
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      alert("please chose file");
+    }
+  };
+
   const body = (
     <Container fluid="md">
       <Row>
@@ -154,6 +200,27 @@ const User = ({ auth, profile, errorsM }) => {
               setEndDate={setEndDate}
               getReport={getReport}
             />
+            <Form>
+              <Form.File
+                id="custom-file-translate-scss"
+                label="chosee img"
+                lang="en"
+                onChange={onChangeBrowse}
+                custom
+              />
+              <div style={{ marginTop: "1%" }}>
+                {loading ? <Spinner animation="grow" /> : ""}
+              </div>
+              <Button
+                style={{ marginTop: "1%", marginBottom: "1%" }}
+                variant="success"
+                onClick={onUpload}>
+                Upload
+              </Button>
+            </Form>
+            <Row style={{ margin: "2%" }}>
+              {userIMG.data ? <CardImg url={userIMG.data} /> : ""}
+            </Row>
           </Card>
         </Col>
       </Row>
