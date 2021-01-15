@@ -1,5 +1,4 @@
 const Profile = require("../models/Profile");
-const User = require("../models/User");
 
 module.exports = {
   addNewData: function (id_user, distance, raceTime, raceDate, callback) {
@@ -32,7 +31,7 @@ module.exports = {
       callback(null, result);
     });
   },
-  
+
   updateData: function (id_data, distance, raceTime, raceDate, callback) {
     Profile.updateOne(
       { _id: id_data },

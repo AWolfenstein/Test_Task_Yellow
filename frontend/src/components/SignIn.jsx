@@ -5,7 +5,7 @@ import ModalError from "./ModalError";
 import { Container, Col, Row, Form, Button } from "react-bootstrap";
 import "../styles/form.css";
 import { connect, useDispatch } from "react-redux";
-import { loginUser  } from "../actions/authActions";
+import { loginUser } from "../actions/authActions";
 
 const SignIn = ({ auth, errorsV }) => {
   const dispatch = useDispatch();
@@ -49,9 +49,9 @@ const SignIn = ({ auth, errorsV }) => {
   });
 
   useEffect(() => {
-   if(auth && auth.isAuthenticated){
-    history.push("/user")
-   }
+    if (auth && auth.isAuthenticated) {
+      history.push("/user");
+    }
   });
 
   /*useEffect(() => {
@@ -114,11 +114,11 @@ const SignIn = ({ auth, errorsV }) => {
           </Form>
           <Row>
             <Col>
-            <br />
-            <div>Dont have account? </div>
-            <Button variant="primary" onClick={toRegister}>
-              Register
-            </Button>
+              <br />
+              <div>Dont have account? </div>
+              <Button variant="primary" onClick={toRegister}>
+                Register
+              </Button>
             </Col>
           </Row>
         </Col>
