@@ -53,3 +53,12 @@ export const logoutUser = () => (dispatch) => {
   setAuthToken(false);
   dispatch(setCurrentUser({}));
 };
+
+export const clearErr = () => (dispatch) => {
+ 
+      dispatch({
+        type: GET_ERRORS,
+        payload: {},
+      })
+  
+};

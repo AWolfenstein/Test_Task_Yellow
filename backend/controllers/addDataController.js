@@ -1,4 +1,6 @@
 const Profile = require("../models/Profile");
+const startOfDay = require("date-fns/startOfDay");
+const endOfDay = require("date-fns/endOfDay");
 
 module.exports = {
   addNewData: function (id_user, distance, raceTime, raceDate, callback) {
@@ -37,6 +39,26 @@ module.exports = {
       { _id: id_data },
       { distance: distance, raceTime: raceTime, raceDate: raceDate },
       { upsert: false },
+      function (err, result) {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(null, result);
+      }
+    );
+  },
+
+  findWeek: function (startDay, endDay,id_user, callback) {
+    console.log(startDay)
+    Profile.find(
+      {
+        raceDate: {
+          $gte: startOfDay(new Date(startDay)),
+          $lte: endOfDay(new Date(endDay)),
+        },
+        id_user:id_user,
+      },
       function (err, result) {
         if (err) {
           callback(err, null);

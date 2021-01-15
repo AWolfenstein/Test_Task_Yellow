@@ -23,7 +23,7 @@ const TableRace = ({
     ? data.map((el, index) => (
         <tr key={index}>
           <td>{index}</td>
-          <td>{el.distance}</td>
+          <td>{el.distance} m.</td>
           <td>{el.raceTime}</td>
           <td>{moment(el.raceDate).format("YYYY-MM-DD")}</td>
           <td>

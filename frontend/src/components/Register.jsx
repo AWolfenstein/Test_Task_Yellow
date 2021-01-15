@@ -7,7 +7,7 @@ import "../styles/form.css";
 import { connect, useDispatch } from "react-redux";
 import { registerUser  } from "../actions/authActions";
 
-const Register = ({ auth }) => {
+const Register = ({ auth, errorsM }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [errorM, setErrorM] = useState("");
@@ -65,14 +65,14 @@ const Register = ({ auth }) => {
     }
    });
 
- /* useEffect(() => {
-    if (message) {
-      const err = (message && message.message) || message.password.message;
+ 
+   useEffect(() => {
+    if (errorsM.message) {
+      const err = errorsM.message 
       setErrorM(err);
       setShow(true);
     }
-  }, [message]);
-*/
+  } );
   const body = (
     <Container fluid="md">
       <Row>
@@ -173,9 +173,10 @@ const Register = ({ auth }) => {
 };
 
 function mapStateToProps(state) {
-  const { auth } = state;
+  const { auth,errorsM } = state;
   return {
-    auth
+    auth,
+    errorsM
   };
 }
 export default connect(mapStateToProps)(Register);

@@ -1,5 +1,12 @@
 import axios from "axios";
-import { GET_ERRORS, SET_DATA, DATA_CREATED, DATA_REMOVED ,DATA_UPDATED } from "./types";
+import {
+  GET_ERRORS,
+  SET_DATA,
+  DATA_CREATED,
+  DATA_REMOVED,
+  DATA_UPDATED,
+  SET_WEEK_DATA,
+} from "./types";
 
 export const getData = (id_user) => (dispatch) => {
   axios
@@ -77,5 +84,27 @@ export const updateRace = (userData, id_user) => (dispatch) => {
 export const dataUpdate = () => {
   return {
     type: DATA_UPDATED,
+  };
+};
+
+export const getRangWeekData = (dates) => (dispatch) => {
+  axios
+    .post("/api/profile/find_week",dates)
+    .then((res) => {
+      const data = res.data;
+      dispatch(setWeekData(data));
+    })
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+export const setWeekData = (data) => {
+  return {
+    type: SET_WEEK_DATA,
+    payload: data,
   };
 };

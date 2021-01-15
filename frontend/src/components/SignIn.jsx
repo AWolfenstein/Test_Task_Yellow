@@ -7,7 +7,7 @@ import "../styles/form.css";
 import { connect, useDispatch } from "react-redux";
 import { loginUser } from "../actions/authActions";
 
-const SignIn = ({ auth, errorsV }) => {
+const SignIn = ({ auth, errorsM }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [errorM, setErrorM] = useState("");
@@ -54,13 +54,13 @@ const SignIn = ({ auth, errorsV }) => {
     }
   });
 
-  /*useEffect(() => {
-    if (message) {
-      const err = (message && message.message) || message.password.message;
+  useEffect(() => {
+    if (errorsM.message) {
+      const err = errorsM.message 
       setErrorM(err);
       setShow(true);
     }
-  }, [message]);*/
+  } );
 
   const toRegister = () => {
     history.push("/register");
@@ -140,9 +140,10 @@ const SignIn = ({ auth, errorsV }) => {
 };
 
 function mapStateToProps(state) {
-  const { auth } = state;
+  const { auth ,errorsM} = state;
   return {
     auth,
+    errorsM
   };
 }
 export default connect(mapStateToProps)(SignIn);
