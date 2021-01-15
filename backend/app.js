@@ -5,7 +5,8 @@ var logger = require("morgan");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-
+swaggerJsdoc = require("swagger-jsdoc"),
+swaggerUi = require("swagger-ui-express");
 
 var usersRouter = require("./routes/api/users");
 var profileRouter = require("./routes/api/profile");
@@ -33,6 +34,40 @@ require("./config/passport")(passport);
   app.use("/api/users", usersRouter);
  app.use("/api/profile", profileRouter);
 const port = process.env.PORT || 5000;
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Express API with Swagger",
+      version: "0.1.0",
+      description:
+        "This is a simple CRUD API application made with Express and documented with Swagger without middleware for profile sorry",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "Aleksei",
+        email: "av93390@gmail.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:5000/",
+      },
+    ],
+  },
+  apis: ["./routes/api/users.js","./routes/api/profile.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
+
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
 // catch 404 and forward to error handler

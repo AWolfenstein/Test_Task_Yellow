@@ -1,3 +1,28 @@
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      User:
+ *        type: object
+ *        required:
+ *          - name
+ *          - email
+ *          - password
+ *        properties:
+ *          name:
+ *            type: string
+ *          email:
+ *            type: string
+ *            format: email
+ *            description: Email for the user, needs to be unique.
+ *          password:
+ *             type: string
+ *             format: password
+ *        example:
+ *           name: Fake
+ *           email: fake@email.com
+ *           password: $2a$10$4bDRkZidoZXKmXEOMFb.vOJS1tIun8xItTwjbIneZz4aB29Gnr0h2
+ */
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -9,6 +34,70 @@ const validateLoginInput = require("../../validation/login");
 
 const User = require("../../models/User");
 
+
+// Routes
+/**
+ * @swagger
+ * tags:
+ * - name: "/api/user/"
+ *   description: "Operations about user"
+ * - name: "/api/profile"
+ *   description: "Access to Profile"
+ * path:
+ * /api/user/register:
+ *   post:
+ *    tags:
+ *    - "/api/user/"
+ *    description: Use to register user
+ *    parameters:
+ *      - name: name
+ *        in: body
+ *        description: Name User
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: string
+ *      - name: Email
+ *        in: body
+ *        description: Email User
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: string
+ *      - name: password
+ *        in: body
+ *        description: password User
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: string
+ *    responses:
+ *      '201':
+ *        description: Successfully created user
+ * /api/user/login:
+ *   post:
+ *    tags:
+ *    - "/api/user/"
+ *    description: Use to login user
+ *    parameters:
+ *      - name: Email
+ *        in: body
+ *        description: Email User
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: string
+ *      - name: password
+ *        in: body
+ *        description: password User
+ *        required: true
+ *        schema:
+ *          type: string
+ *          format: string
+ *    responses:
+ *      '200':
+ *        description: Successfully 
+ */
 router.post("/register", (req, res) => {
   // Form validation
 
